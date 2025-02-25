@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: microservice2
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: microservice2
+  template:
+    metadata:
+      labels:
+        app: microservice2
+    spec:
+      containers:
+      - name: microservice2
+#        image: workerapp5
+        image: faresdockerhub/faresbadranrepo:8.0
+        env:
+        - name: QUEUE_URL
+          value: "https://sqs.us-west-2.amazonaws.com/536697248264/my-sqs-queue"
+        - name: BUCKET_NAME
+          value: "my-s3-bucket"

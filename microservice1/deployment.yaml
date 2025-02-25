@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: microservice1
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: microservice1
+  template:
+    metadata:
+      labels:
+        app: microservice1
+    spec:
+      containers:
+      - name: microservice1
+        image: faresdockerhub/faresbadranrepo:3.0
+        ports:
+        - containerPort: 8080
+        env:
+        - name: QUEUE_URL
+          value: "https://sqs.us-west-2.amazonaws.com/536697248264/my-sqs-queue"
+        - name: TOKEN_PARAMETER_NAME
+          value: "/microservice/token"
+#      imagePullSecrets:
+#      - name: my-registry-secret-fares
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: microservice1
+spec:
+  selector:
+    app: microservice1
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+  type: LoadBalancer
